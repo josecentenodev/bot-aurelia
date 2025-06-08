@@ -1,0 +1,22 @@
+---
+import LinkButton from "./LinkButton.astro";
+
+const links = [{
+    href: '/',
+    text: 'Configurar IA',
+}, {
+    href: '/playground/',
+    text: 'Playground',
+}, {
+    href: '/avanzado/',
+    text: 'Avanzado',
+}];
+---
+
+<nav class="w-[220px] h-full text-right">
+    <ul class="flex flex-col gap-4 pt-20">
+        {links.map(link => (
+            <LinkButton href={link.href} text={link.text} />
+        ))}
+    </ul>
+</nav>

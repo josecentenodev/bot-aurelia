@@ -1,0 +1,145 @@
+---
+import { actions } from "astro:actions";
+import { ConfiguracionAvanzadaSchema } from "../types/index";
+import Spinner from "./Spinner.astro";
+
+export const prerender = false;
+
+const { data, error } = await Astro.callAction(actions.obtenerConfiguracionAvanzada, undefined);
+
+if (error) console.error(error);
+
+const formData = data?.data || {
+  TiempoRespuesta: 10,
+  Recontactos: 3,
+  TiempoRecontactos: 3600,
+};
+---
+<div class="flex flex-col w-full px-[60px]">
+    <div class="advanced-section">
+        <h2 class="text-2xl text-[#000055] pb-5">Configuración de asistente</h2>
+        <form id="apiConfigForm" class="flex flex-col w-[400px]" method="POST" action={actions.guardarConfiguracionAvanzada}>
+            <div id="alertContainer"></div>
+            
+            <div class="flex flex-col gap-2 pb-5">
+                <label for="Recontactos" class="text-[#7806F1] text-xl font-bold">Cantidad de recontactos</label>
+                <input
+                    class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] w-full"
+                    type="number"
+                    id="Recontactos"
+                    name="Recontactos"
+                    placeholder="Ingrese la cantidad de recontactos"
+                    value={formData.Recontactos}
+                    min="0"
+                />
+            </div>
+            <div class="flex flex-col gap-2 pb-5">
+                <label for="TiempoRespuesta" class="text-[#7806F1] text-xl font-bold">Tiempo de respuesta (segundos)</label>
+                <input
+                    class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] w-full"
+                    type="number"
+                    id="TiempoRespuesta"
+                    name="TiempoRespuesta"
+                    placeholder="Mínimo 10 segundos"
+                    value={formData.TiempoRespuesta}
+                    min="10"
+                />
+            </div>
+            <div class="flex flex-col gap-2 pb-5">
+                <label for="TiempoRecontactos" class="text-[#7806F1] text-xl font-bold">Tiempo de recontacto (segundos)</label>
+                <input
+                    class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] w-full"
+                    type="number"
+                    id="TiempoRecontactos"
+                    name="TiempoRecontactos"
+                    placeholder="Mínimo 3600 segundos (1 hora)"
+                    value={formData.TiempoRecontactos}
+                    min="3600"
+                />
+            </div>
+            <div>
+                <button
+                    type="submit"
+                    class="bg-[#976FF1] py-2 px-5 rounded-lg text-white text-lg w-48 self-center hover:cursor-pointer transition-all duration-150 active:scale-95 flex items-center justify-center gap-2"
+                >
+                    <span id="buttonText">Guardar Cambios</span>
+                    <div id="spinner" class="hidden">
+                        <Spinner size="small" />
+                    </div>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+  const form = document.getElementById('apiConfigForm') as HTMLFormElement;
+  const spinner = document.getElementById('spinner') as HTMLDivElement;
+  const buttonText = document.getElementById('buttonText') as HTMLSpanElement;
+  const alertContainer = document.getElementById('alertContainer') as HTMLDivElement;
+
+  function showAlert(type: 'success' | 'error', message: string) {
+    const alertElement = document.createElement('div');
+    alertContainer.innerHTML = '';
+    alertContainer.appendChild(alertElement);
+    
+    const alert = document.createElement('div');
+    alert.className = `p-4 mb-4 rounded-lg ${
+      type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+    }`;
+    alert.textContent = message;
+    alertElement.appendChild(alert);
+
+    setTimeout(() => {
+      alertElement.remove();
+    }, 5000);
+  }
+
+  function setLoading(isLoading: boolean) {
+    if (isLoading) {
+      spinner.classList.remove('hidden');
+      buttonText.textContent = 'Guardando...';
+      form.querySelectorAll('input').forEach(el => {
+        (el as HTMLElement).setAttribute('disabled', 'true');
+      });
+    } else {
+      spinner.classList.add('hidden');
+      buttonText.textContent = 'Guardar Cambios';
+      form.querySelectorAll('input').forEach(el => {
+        (el as HTMLElement).removeAttribute('disabled');
+      });
+    }
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        showAlert('success', 'Cambios guardados exitosamente');
+      } else {
+        showAlert('error', result.error || 'Error al guardar los cambios');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      showAlert('error', 'Error al guardar los cambios');
+    } finally {
+      setLoading(false);
+    }
+  });
+</script>

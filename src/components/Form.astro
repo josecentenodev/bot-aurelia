@@ -1,0 +1,257 @@
+---
+import { actions } from "astro:actions";
+import { FormularioConfiguracion, Tono } from "../types/index";
+import Spinner from "./Spinner.astro";
+
+export const prerender = false;
+
+const { data, error } = await Astro.callAction(actions.obtenerDatosConfiguracion, undefined);
+
+if (error) console.error(error);
+
+const formData: FormularioConfiguracion = {
+  NombreAsistente: data?.data?.NombreAsistente || "",
+  NombreEmpresa: data?.data?.NombreEmpresa || "",
+  DescripcionEmpresa: data?.data?.DescripcionEmpresa || "",
+  Objetivo: data?.data?.Objetivo || "",
+  Tono: data?.data?.Tono || Tono.Profesional,
+  Sector: data?.data?.Sector || "",
+  Personalidad: data?.data?.Personalidad || "",
+  ClientesObjetivos: data?.data?.ClientesObjetivos || "",
+  PreguntasFrecuentes: data?.data?.PreguntasFrecuentes || "",
+  PreguntasCalificacion: data?.data?.PreguntasCalificacion || "",
+  EjemplosConversaciones: data?.data?.EjemplosConversaciones || "",
+  ManejoObjeciones: data?.data?.ManejoObjeciones || "",
+  ProductosNoDisponibles: data?.data?.ProductosNoDisponibles || ""
+};
+---
+
+<form id="configForm" class="w-full flex flex-col gap-5 px-10 pb-10" method="POST" action={actions.guardarCambiosConfiguracion}>
+  <div id="alertContainer"></div>
+  
+  <div class="grid grid-cols-3 gap-10">
+    <div class="flex flex-col gap-2">
+      <label for="NombreAsistente" class="text-[#7806F1] text-xl font-bold">Nombre del asistente</label>
+      <input
+        class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1]"
+        type="text"
+        id="NombreAsistente"
+        name="NombreAsistente"
+        placeholder="Ingrese el nombre del asistente"
+        value={formData.NombreAsistente}
+        required
+      />
+    </div>
+    <div class="flex flex-col gap-2">
+      <label for="NombreEmpresa" class="text-[#7806F1] text-xl font-bold">Nombre de la empresa</label>
+      <input
+        class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1]"
+        type="text"
+        id="NombreEmpresa"
+        name="NombreEmpresa"
+        placeholder="Ingrese el nombre de la empresa"
+        value={formData.NombreEmpresa}
+        required
+      />
+    </div>
+    <div class="flex flex-col gap-2">
+      <label for="Tono" class="text-[#7806F1] text-xl font-bold">Tono</label>
+      <div class="relative">
+        <select
+          id="Tono"
+          name="Tono"
+          class="w-full bg-white h-[32px] p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] appearance-none pr-10"
+          value={formData.Tono}
+          required
+        >
+          <option value="">Seleccione el tono del asistente</option>
+          <option value={Tono.Profesional} selected={formData.Tono === Tono.Profesional}>Profesional</option>
+          <option value={Tono.Informal} selected={formData.Tono === Tono.Informal}>Informal</option>
+          <option value={Tono.Tecnico} selected={formData.Tono === Tono.Tecnico}>Técnico</option>
+          <option value={Tono.Cercano} selected={formData.Tono === Tono.Cercano}>Cercano</option>
+          <option value={Tono.Empatico} selected={formData.Tono === Tono.Empatico}>Empático</option>
+        </select>
+        <img
+          width="16"
+          height="16"
+          src="/circle-arrow-down.svg"
+          alt="Icono de flecha hacia abajo"
+          class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-3 gap-10">
+    <div class="flex flex-col gap-2">
+      <label for="Sector" class="text-[#7806F1] text-xl font-bold">Sector</label>
+      <input
+        class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1]"
+        type="text"
+        id="Sector"
+        name="Sector"
+        placeholder="Ingrese el sector de la empresa"
+        value={formData.Sector}
+      />
+    </div>
+    <div class="flex flex-col gap-2">
+      <label for="ClientesObjetivos" class="text-[#7806F1] text-xl font-bold">Clientes objetivos</label>
+      <input
+        class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1]"
+        type="text"
+        id="ClientesObjetivos"
+        name="ClientesObjetivos"
+        placeholder="Ingrese los clientes objetivo del asistente"
+        value={formData.ClientesObjetivos}
+      />
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-5">
+    <div class="flex flex-col gap-2">
+      <label for="DescripcionEmpresa" class="text-[#7806F1] text-xl font-bold">Descripción de la empresa</label>
+      <textarea
+        class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
+        id="DescripcionEmpresa"
+        name="DescripcionEmpresa"
+        placeholder="Ingrese la descripción de la empresa"
+      >{formData.DescripcionEmpresa}</textarea>
+    </div>
+    <div class="flex flex-col gap-2">
+      <label for="Personalidad" class="text-[#7806F1] text-xl font-bold">Personalidad</label>
+      <textarea
+        class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
+        id="Personalidad"
+        name="Personalidad"
+        placeholder="Ingrese el comportamiento del asistente"
+      >{formData.Personalidad}</textarea>
+    </div>
+    <label for="PreguntasCalificacion" class="text-[#7806F1] text-xl font-bold">Preguntas de calificacion</label>
+    <textarea
+      class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
+      id="PreguntasCalificacion"
+      name="PreguntasCalificacion"
+      placeholder="Ingrese las preguntas de calificacion"
+    >{formData.PreguntasCalificacion}</textarea>
+    <label for="PreguntasFrecuentes" class="text-[#7806F1] text-xl font-bold">Temas Frecuentes</label>
+    <textarea
+      class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
+      id="PreguntasFrecuentes"
+      name="PreguntasFrecuentes"
+      placeholder="Ingrese preguntas frecuentes"
+    >{formData.PreguntasFrecuentes}</textarea>
+    <label for="EjemplosConversaciones" class="text-[#7806F1] text-xl font-bold">Ejemplos de conversaciones</label>
+    <textarea
+      class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
+      id="EjemplosConversaciones"
+      name="EjemplosConversaciones"
+      placeholder="Ingrese algunos ejemplos de conversaciones"
+    >{formData.EjemplosConversaciones}</textarea>
+    <label for="ManejoObjeciones" class="text-[#7806F1] text-xl font-bold">Casos de errores</label>
+    <textarea
+      class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
+      id="ManejoObjeciones"
+      name="ManejoObjeciones"
+      placeholder="Ingrese algunos casos de errores"
+    >{formData.ManejoObjeciones}</textarea>
+    <label for="ProductosNoDisponibles" class="text-[#7806F1] text-xl font-bold">Productos no disponibles</label>
+    <textarea
+      class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
+      id="ProductosNoDisponibles"
+      name="ProductosNoDisponibles"
+      placeholder="Ingrese los productos no disponibles"
+    >{formData.ProductosNoDisponibles}</textarea>
+    <label for="Objetivo" class="text-[#7806F1] text-xl font-bold">Objetivo</label>
+    <textarea
+      class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
+      id="Objetivo"
+      name="Objetivo"
+      placeholder="Ingrese el objetivo del asistente"
+      required
+    >{formData.Objetivo}</textarea>
+  </div>
+  
+  <div class="flex items-center justify-center gap-4">
+    <button
+      type="submit"
+      class="bg-[#976FF1] py-2 px-5 rounded-lg text-white text-lg w-48 hover:cursor-pointer transition-all duration-150 active:scale-95 flex items-center justify-center gap-2"
+    >
+      <span id="buttonText">Guardar Cambios</span>
+      <div id="spinner" class="hidden">
+        <Spinner size="small" />
+      </div>
+    </button>
+  </div>
+</form>
+
+<script>
+  const form = document.getElementById('configForm') as HTMLFormElement;
+  const spinner = document.getElementById('spinner') as HTMLDivElement;
+  const buttonText = document.getElementById('buttonText') as HTMLSpanElement;
+  const alertContainer = document.getElementById('alertContainer') as HTMLDivElement;
+
+  function showAlert(type: 'success' | 'error', message: string) {
+    const alertElement = document.createElement('div');
+    alertContainer.innerHTML = '';
+    alertContainer.appendChild(alertElement);
+    
+    const alert = document.createElement('div');
+    alert.className = `p-4 mb-4 rounded-lg ${
+      type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+    }`;
+    alert.textContent = message;
+    alertElement.appendChild(alert);
+
+    setTimeout(() => {
+      alertElement.remove();
+    }, 5000);
+  }
+
+  function setLoading(isLoading: boolean) {
+    if (isLoading) {
+      spinner.classList.remove('hidden');
+      buttonText.textContent = 'Guardando...';
+      form.querySelectorAll('input, select, textarea').forEach(el => {
+        (el as HTMLElement).setAttribute('disabled', 'true');
+      });
+    } else {
+      spinner.classList.add('hidden');
+      buttonText.textContent = 'Guardar Cambios';
+      form.querySelectorAll('input, select, textarea').forEach(el => {
+        (el as HTMLElement).removeAttribute('disabled');
+      });
+    }
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        showAlert('success', 'Cambios guardados exitosamente');
+      } else {
+        showAlert('error', result.error || 'Error al guardar los cambios');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      showAlert('error', 'Error al guardar los cambios');
+    } finally {
+      setLoading(false);
+    }
+  });
+</script>
