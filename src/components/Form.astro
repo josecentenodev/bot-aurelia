@@ -49,6 +49,7 @@ const formData: FormularioConfiguracion = {
           title="El nombre que tendrá tu asistente virtual. Este nombre será visible para tus clientes."
         >
           Nombre del asistente
+          <span class="text-red-500 ml-1">*</span>
           <span class="text-[#7806F1] text-sm cursor-help">ⓘ</span>
         </label>
         <input
@@ -73,6 +74,7 @@ const formData: FormularioConfiguracion = {
           title="El nombre de tu empresa o negocio. Este nombre será usado por el asistente para referirse a tu empresa."
         >
           Nombre de la empresa
+          <span class="text-red-500 ml-1">*</span>
           <span class="text-[#7806F1] text-sm cursor-help">ⓘ</span>
         </label>
         <input
@@ -180,7 +182,8 @@ const formData: FormularioConfiguracion = {
           class="text-[#7806F1] text-xl font-bold flex items-center gap-2 group relative"
           title="Describe el perfil de tus clientes ideales. Incluye características demográficas, necesidades y comportamientos."
         >
-          Clientes objetivos
+          Objetivo
+          <span class="text-red-500 ml-1">*</span>
           <span class="text-[#7806F1] text-sm cursor-help">ⓘ</span>
         </label>
         <input
@@ -195,7 +198,7 @@ const formData: FormularioConfiguracion = {
           aria-describedby="ClientesObjetivos-description"
         />
         <span id="ClientesObjetivos-description" class="sr-only">
-          Describe el perfil de tus clientes ideales. Incluye características demográficas, necesidades y comportamientos.
+          Describe el objetivo de tu asistente virtual. Por ejemplo: vender, informar, resolver dudas, etc.
         </span>
       </div>
     </div>
