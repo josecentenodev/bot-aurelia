@@ -1,5 +1,6 @@
 import Airtable from 'airtable';
 import { ConfiguracionAvanzada, FormularioConfiguracion } from "../types";
+import { AirtableResponse, AirtableRecord } from "../types/airtable";
 
 // Configuración global de Airtable
 Airtable.configure({
@@ -8,77 +9,93 @@ Airtable.configure({
 
 const base = Airtable.base(import.meta.env.AIRTABLE_BASE_ID);
 
-interface AirtableRecord {
-    id: string;
-    fields: Record<string, any>;
-}
-
-export async function getAirtableData(tableId: string) {
+export async function getAirtableData(table: string): Promise<AirtableResponse> {
     try {
-        const records = (await base(tableId).select().firstPage()) as unknown as AirtableRecord[];
-        
-        if (!records || records.length === 0) {
-            return { 
-                success: false, 
-                error: 'No se encontraron registros' 
+        // Primero obtenemos el asistente asociado al locationId
+        const asistentePorClienteRecords = await base(table).select({
+            filterByFormula: `{locationId} = '${import.meta.env.LOCATION_ID}'`,
+            maxRecords: 1
+        }).firstPage();
+
+        if (!asistentePorClienteRecords || asistentePorClienteRecords.length === 0) {
+            return {
+                success: false,
+                error: 'No se encontró asistente asociado al cliente'
             };
         }
 
-        return { 
-            success: true, 
-            data: records[0].fields 
+        // Obtenemos el asistenteId de la relación
+        const asistenteId = asistentePorClienteRecords[0].fields.asistenteId;
+        if (!asistenteId) {
+            return {
+                success: false,
+                error: 'No se encontró ID del asistente'
+            };
+        }
+
+        // Ahora obtenemos los datos del asistente
+        const asistenteRecords = await base('Asistente').select({
+            filterByFormula: `{asistenteId} = '${asistenteId}'`,
+            maxRecords: 1
+        }).firstPage();
+
+        if (!asistenteRecords || asistenteRecords.length === 0) {
+            return {
+                success: false,
+                error: 'No se encontró el asistente'
+            };
+        }
+
+        const record: AirtableRecord = {
+            id: asistenteRecords[0].id,
+            fields: asistenteRecords[0].fields as FormularioConfiguracion
+        };
+
+        return {
+            success: true,
+            data: record
         };
     } catch (error) {
-        console.error('Error detallado al cargar datos desde Airtable:', error);
-        return { 
-            success: false, 
-            error: error instanceof Error ? error.message : 'Error al cargar datos'
+        console.error('Error al obtener datos de Airtable:', error);
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Error al obtener datos'
         };
     }
 }
 
-export async function saveAirtableData(tableId: string, data: FormularioConfiguracion | ConfiguracionAvanzada) {
+export async function updateAirtableData(table: string, recordId: string, data: FormularioConfiguracion | ConfiguracionAvanzada): Promise<AirtableResponse> {
     try {
-        const record = await base(tableId).create([
-            { fields: data }
-        ]);
+        // Filtrar campos undefined y null
+        const fields = Object.fromEntries(
+            Object.entries(data).filter(([_, value]) => value !== undefined && value !== null)
+        );
 
-        return { 
-            success: true, 
-            data: record[0].fields 
+        // Actualizamos el registro
+        const record = await base(table).update(recordId, fields);
+
+        const airtableRecord: AirtableRecord = {
+            id: record.id,
+            fields: record.fields as FormularioConfiguracion | ConfiguracionAvanzada
+        };
+
+        return {
+            success: true,
+            data: airtableRecord
         };
     } catch (error) {
-        console.error('Error detallado al guardar configuración en Airtable:', error);
-        return { 
-            success: false, 
-            error: error instanceof Error ? error.message : 'Error al guardar datos'
-        };
-    }
-}
-
-export async function updateAirtableData(tableId: string, recordId: string, data: FormularioConfiguracion | ConfiguracionAvanzada) {
-    try {
-        const record = await base(tableId).update([
-            { id: recordId, fields: data }
-        ]);
-
-        return { 
-            success: true, 
-            data: record[0].fields 
-        };
-    } catch (error) {
-        console.error('Error detallado al actualizar configuración en Airtable:', error);
-        return { 
-            success: false, 
+        console.error('Error al actualizar datos en Airtable:', error);
+        return {
+            success: false,
             error: error instanceof Error ? error.message : 'Error al actualizar datos'
         };
     }
 }
 
-export async function enviarMensaje(mensaje: string, tableId: string) {
+export async function enviarMensaje(mensaje: string, table: string) {
     try {
         // Obtener la configuración del asistente desde Airtable
-        const configRecord = await base(tableId).select().firstPage();
+        const configRecord = await base(table).select().firstPage();
         
         if (!configRecord || configRecord.length === 0) {
             throw new Error('No se encontró configuración del asistente');
