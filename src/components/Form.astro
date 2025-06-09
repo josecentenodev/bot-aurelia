@@ -45,9 +45,12 @@ const formData: FormularioConfiguracion = {
       <div class="flex flex-col gap-2">
         <label
           for="NombreAsistente"
-          class="text-[#7806F1] text-xl font-bold"
-          >Nombre del asistente</label
+          class="text-[#7806F1] text-xl font-bold flex items-center gap-2 group relative"
+          title="El nombre que tendrá tu asistente virtual. Este nombre será visible para tus clientes."
         >
+          Nombre del asistente
+          <span class="text-[#7806F1] text-sm cursor-help">ⓘ</span>
+        </label>
         <input
           class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-12"
           type="text"
@@ -56,14 +59,22 @@ const formData: FormularioConfiguracion = {
           placeholder="Ingrese el nombre del asistente"
           value={formData.NombreAsistente}
           required
+          aria-label="Nombre del asistente"
+          aria-describedby="NombreAsistente-description"
         />
+        <span id="NombreAsistente-description" class="sr-only">
+          El nombre que tendrá tu asistente virtual. Este nombre será visible para tus clientes.
+        </span>
       </div>
       <div class="flex flex-col gap-2">
         <label
           for="NombreEmpresa"
-          class="text-[#7806F1] text-xl font-bold"
-          >Nombre de la empresa</label
+          class="text-[#7806F1] text-xl font-bold flex items-center gap-2 group relative"
+          title="El nombre de tu empresa o negocio. Este nombre será usado por el asistente para referirse a tu empresa."
         >
+          Nombre de la empresa
+          <span class="text-[#7806F1] text-sm cursor-help">ⓘ</span>
+        </label>
         <input
           class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-12"
           type="text"
@@ -72,14 +83,22 @@ const formData: FormularioConfiguracion = {
           placeholder="Ingrese el nombre de la empresa"
           value={formData.NombreEmpresa}
           required
+          aria-label="Nombre de la empresa"
+          aria-describedby="NombreEmpresa-description"
         />
+        <span id="NombreEmpresa-description" class="sr-only">
+          El nombre de tu empresa o negocio. Este nombre será usado por el asistente para referirse a tu empresa.
+        </span>
       </div>
       <div class="flex flex-col gap-2">
         <label
           for="Tono"
-          class="text-[#7806F1] text-xl font-bold"
-          >Tono</label
+          class="text-[#7806F1] text-xl font-bold flex items-center gap-2 group relative"
+          title="Define el estilo de comunicación del asistente. Profesional: formal y directo. Informal: cercano y casual. Técnico: especializado y detallado. Cercano: amigable y personal. Empático: comprensivo y emocional."
         >
+          Tono
+          <span class="text-[#7806F1] text-sm cursor-help">ⓘ</span>
+        </label>
         <div class="relative">
           <select
             id="Tono"
@@ -87,6 +106,8 @@ const formData: FormularioConfiguracion = {
             class="w-full bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] appearance-none pr-10 h-12"
             value={formData.Tono}
             required
+            aria-label="Tono de comunicación"
+            aria-describedby="Tono-description"
           >
             <option value="">Seleccione el tono del asistente</option>
             <option
@@ -115,6 +136,9 @@ const formData: FormularioConfiguracion = {
               >Empático</option
             >
           </select>
+          <span id="Tono-description" class="sr-only">
+            Define el estilo de comunicación del asistente. Profesional: formal y directo. Informal: cercano y casual. Técnico: especializado y detallado. Cercano: amigable y personal. Empático: comprensivo y emocional.
+          </span>
           <img
             width="16"
             height="16"
@@ -130,9 +154,12 @@ const formData: FormularioConfiguracion = {
       <div class="flex flex-col gap-2">
         <label
           for="Sector"
-          class="text-[#7806F1] text-xl font-bold"
-          >Sector</label
+          class="text-[#7806F1] text-xl font-bold flex items-center gap-2 group relative"
+          title="El sector o industria en la que opera tu empresa. Esto ayuda al asistente a entender mejor el contexto de tu negocio."
         >
+          Sector
+          <span class="text-[#7806F1] text-sm cursor-help">ⓘ</span>
+        </label>
         <input
           class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-12"
           type="text"
@@ -140,14 +167,22 @@ const formData: FormularioConfiguracion = {
           name="Sector"
           placeholder="Ingrese el sector de la empresa"
           value={formData.Sector}
+          aria-label="Sector de la empresa"
+          aria-describedby="Sector-description"
         />
+        <span id="Sector-description" class="sr-only">
+          El sector o industria en la que opera tu empresa. Esto ayuda al asistente a entender mejor el contexto de tu negocio.
+        </span>
       </div>
       <div class="flex flex-col gap-2">
         <label
           for="ClientesObjetivos"
-          class="text-[#7806F1] text-xl font-bold"
-          >Clientes objetivos</label
+          class="text-[#7806F1] text-xl font-bold flex items-center gap-2 group relative"
+          title="Describe el perfil de tus clientes ideales. Incluye características demográficas, necesidades y comportamientos."
         >
+          Clientes objetivos
+          <span class="text-[#7806F1] text-sm cursor-help">ⓘ</span>
+        </label>
         <input
           class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-12"
           type="text"
@@ -156,7 +191,12 @@ const formData: FormularioConfiguracion = {
           placeholder="Ingrese los clientes objetivo del asistente"
           value={formData.ClientesObjetivos}
           required
+          aria-label="Clientes objetivos"
+          aria-describedby="ClientesObjetivos-description"
         />
+        <span id="ClientesObjetivos-description" class="sr-only">
+          Describe el perfil de tus clientes ideales. Incluye características demográficas, necesidades y comportamientos.
+        </span>
       </div>
     </div>
 
@@ -164,104 +204,180 @@ const formData: FormularioConfiguracion = {
       <div class="flex flex-col gap-2">
         <label
           for="DescripcionEmpresa"
-          class="text-[#7806F1] text-xl font-bold"
-          >Descripción de la empresa</label
+          class="text-[#7806F1] text-xl font-bold flex items-center gap-2 group relative"
+          title="Una descripción detallada de tu empresa, incluyendo su misión, visión y valores. Esto ayuda al asistente a representar mejor tu marca."
         >
+          Descripción de la empresa
+          <span class="text-[#7806F1] text-sm cursor-help">ⓘ</span>
+        </label>
         <textarea
           class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
           id="DescripcionEmpresa"
           name="DescripcionEmpresa"
           placeholder="Ingrese la descripción de la empresa"
+          aria-label="Descripción de la empresa"
+          aria-describedby="DescripcionEmpresa-description"
           >{formData.DescripcionEmpresa}</textarea
         >
+        <span id="DescripcionEmpresa-description" class="sr-only">
+          Una descripción detallada de tu empresa, incluyendo su misión, visión y valores. Esto ayuda al asistente a representar mejor tu marca.
+        </span>
       </div>
       <div class="flex flex-col gap-2">
         <label
           for="Personalidad"
-          class="text-[#7806F1] text-xl font-bold"
-          >Personalidad</label
+          class="text-[#7806F1] text-xl font-bold flex items-center gap-2 group relative"
+          title="Define la personalidad y el estilo de comunicación del asistente. Incluye cómo debe comportarse, qué tono usar y cómo debe interactuar con los clientes."
         >
+          Personalidad
+          <span class="text-[#7806F1] text-sm cursor-help">ⓘ</span>
+        </label>
         <textarea
           class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
           id="Personalidad"
           name="Personalidad"
           placeholder="Ingrese el comportamiento del asistente"
+          aria-label="Personalidad del asistente"
+          aria-describedby="Personalidad-description"
           >{formData.Personalidad}</textarea
         >
+        <span id="Personalidad-description" class="sr-only">
+          Define la personalidad y el estilo de comunicación del asistente. Incluye cómo debe comportarse, qué tono usar y cómo debe interactuar con los clientes.
+        </span>
       </div>
-      <label
-        for="PreguntasCalificacion"
-        class="text-[#7806F1] text-xl font-bold"
-        >Preguntas de calificacion</label
-      >
-      <textarea
-        class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
-        id="PreguntasCalificacion"
-        name="PreguntasCalificacion"
-        placeholder="Ingrese las preguntas de calificacion"
-        >{formData.PreguntasCalificacion}</textarea
-      >
-      <label
-        for="PreguntasFrecuentes"
-        class="text-[#7806F1] text-xl font-bold"
-        >Temas Frecuentes</label
-      >
-      <textarea
-        class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
-        id="PreguntasFrecuentes"
-        name="PreguntasFrecuentes"
-        placeholder="Ingrese preguntas frecuentes"
-        >{formData.PreguntasFrecuentes}</textarea
-      >
-      <label
-        for="EjemplosConversaciones"
-        class="text-[#7806F1] text-xl font-bold"
-        >Ejemplos de conversaciones</label
-      >
-      <textarea
-        class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
-        id="EjemplosConversaciones"
-        name="EjemplosConversaciones"
-        placeholder="Ingrese algunos ejemplos de conversaciones"
-        >{formData.EjemplosConversaciones}</textarea
-      >
-      <label
-        for="ManejoObjeciones"
-        class="text-[#7806F1] text-xl font-bold"
-        >Casos de errores</label
-      >
-      <textarea
-        class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
-        id="ManejoObjeciones"
-        name="ManejoObjeciones"
-        placeholder="Ingrese algunos casos de errores"
-        >{formData.ManejoObjeciones}</textarea
-      >
-      <label
-        for="ProductosNoDisponibles"
-        class="text-[#7806F1] text-xl font-bold"
-        >Productos no disponibles</label
-      >
-      <textarea
-        class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
-        id="ProductosNoDisponibles"
-        name="ProductosNoDisponibles"
-        placeholder="Ingrese los productos no disponibles"
-        >{formData.ProductosNoDisponibles}</textarea
-      >
-      <label
-        for="Objetivo"
-        class="text-[#7806F1] text-xl font-bold"
-        >Objetivo</label
-      >
-      <textarea
-        class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
-        id="Objetivo"
-        name="Objetivo"
-        placeholder="Ingrese el objetivo del asistente"
-        required
-        >{formData.Objetivo}</textarea
-      >
+      <div class="flex flex-col gap-2">
+        <label
+          for="PreguntasCalificacion"
+          class="text-[#7806F1] text-xl font-bold flex items-center gap-2 group relative"
+          title="Preguntas que el asistente debe hacer para calificar y entender mejor las necesidades del cliente."
+        >
+          Preguntas de calificación
+          <span class="text-[#7806F1] text-sm cursor-help">ⓘ</span>
+        </label>
+        <textarea
+          class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
+          id="PreguntasCalificacion"
+          name="PreguntasCalificacion"
+          placeholder="Ingrese las preguntas de calificacion"
+          aria-label="Preguntas de calificación"
+          aria-describedby="PreguntasCalificacion-description"
+          >{formData.PreguntasCalificacion}</textarea
+        >
+        <span id="PreguntasCalificacion-description" class="sr-only">
+          Preguntas que el asistente debe hacer para calificar y entender mejor las necesidades del cliente.
+        </span>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label
+          for="PreguntasFrecuentes"
+          class="text-[#7806F1] text-xl font-bold flex items-center gap-2 group relative"
+          title="Temas y preguntas frecuentes que el asistente debe conocer y poder responder."
+        >
+          Temas Frecuentes
+          <span class="text-[#7806F1] text-sm cursor-help">ⓘ</span>
+        </label>
+        <textarea
+          class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
+          id="PreguntasFrecuentes"
+          name="PreguntasFrecuentes"
+          placeholder="Ingrese preguntas frecuentes"
+          aria-label="Temas frecuentes"
+          aria-describedby="PreguntasFrecuentes-description"
+          >{formData.PreguntasFrecuentes}</textarea
+        >
+        <span id="PreguntasFrecuentes-description" class="sr-only">
+          Temas y preguntas frecuentes que el asistente debe conocer y poder responder.
+        </span>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label
+          for="EjemplosConversaciones"
+          class="text-[#7806F1] text-xl font-bold flex items-center gap-2 group relative"
+          title="Ejemplos de conversaciones exitosas que el asistente puede usar como referencia para interactuar con los clientes."
+        >
+          Ejemplos de conversaciones
+          <span class="text-[#7806F1] text-sm cursor-help">ⓘ</span>
+        </label>
+        <textarea
+          class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
+          id="EjemplosConversaciones"
+          name="EjemplosConversaciones"
+          placeholder="Ingrese algunos ejemplos de conversaciones"
+          aria-label="Ejemplos de conversaciones"
+          aria-describedby="EjemplosConversaciones-description"
+          >{formData.EjemplosConversaciones}</textarea
+        >
+        <span id="EjemplosConversaciones-description" class="sr-only">
+          Ejemplos de conversaciones exitosas que el asistente puede usar como referencia para interactuar con los clientes.
+        </span>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label
+          for="ManejoObjeciones"
+          class="text-[#7806F1] text-xl font-bold flex items-center gap-2 group relative"
+          title="Cómo el asistente debe manejar objeciones y situaciones difíciles con los clientes."
+        >
+          Casos de errores
+          <span class="text-[#7806F1] text-sm cursor-help">ⓘ</span>
+        </label>
+        <textarea
+          class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
+          id="ManejoObjeciones"
+          name="ManejoObjeciones"
+          placeholder="Ingrese algunos casos de errores"
+          aria-label="Casos de errores"
+          aria-describedby="ManejoObjeciones-description"
+          >{formData.ManejoObjeciones}</textarea
+        >
+        <span id="ManejoObjeciones-description" class="sr-only">
+          Cómo el asistente debe manejar objeciones y situaciones difíciles con los clientes.
+        </span>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label
+          for="ProductosNoDisponibles"
+          class="text-[#7806F1] text-xl font-bold flex items-center gap-2 group relative"
+          title="Lista de productos o servicios que no están disponibles y cómo el asistente debe comunicarlo a los clientes."
+        >
+          Productos no disponibles
+          <span class="text-[#7806F1] text-sm cursor-help">ⓘ</span>
+        </label>
+        <textarea
+          class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
+          id="ProductosNoDisponibles"
+          name="ProductosNoDisponibles"
+          placeholder="Ingrese los productos no disponibles"
+          aria-label="Productos no disponibles"
+          aria-describedby="ProductosNoDisponibles-description"
+          >{formData.ProductosNoDisponibles}</textarea
+        >
+        <span id="ProductosNoDisponibles-description" class="sr-only">
+          Lista de productos o servicios que no están disponibles y cómo el asistente debe comunicarlo a los clientes.
+        </span>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label
+          for="Objetivo"
+          class="text-[#7806F1] text-xl font-bold flex items-center gap-2 group relative"
+          title="El objetivo principal del asistente al interactuar con los clientes. Por ejemplo: vender, informar, resolver dudas, etc."
+        >
+          Objetivo
+          <span class="text-[#7806F1] text-sm cursor-help">ⓘ</span>
+        </label>
+        <textarea
+          class="bg-white p-2 border border-[#ddd] rounded-xl focus:outline-1 outline-[#7806F1] h-[150px]"
+          id="Objetivo"
+          name="Objetivo"
+          placeholder="Ingrese el objetivo del asistente"
+          required
+          aria-label="Objetivo del asistente"
+          aria-describedby="Objetivo-description"
+          >{formData.Objetivo}</textarea
+        >
+        <span id="Objetivo-description" class="sr-only">
+          El objetivo principal del asistente al interactuar con los clientes. Por ejemplo: vender, informar, resolver dudas, etc.
+        </span>
+      </div>
     </div>
 
     <div class="flex items-center justify-center gap-4 fixed bottom-10 left-0 right-0">
