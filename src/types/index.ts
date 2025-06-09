@@ -36,7 +36,7 @@ export const ConfiguracionAvanzadaSchema = z.object({
 	fields: z.object({
 		TiempoRespuesta: z.number().min(1, 'El tiempo de respuesta es requerido'),
 		Recontactos: z.number().min(1, 'El número de recontactos es requerido'),
-		TiempoRecontactos: z.number().min(1, 'El tiempo de recontactos es requerido')
+		TiempoRecontacto: z.number().min(1, 'El tiempo de recontacto es requerido')
 	})
 });
 

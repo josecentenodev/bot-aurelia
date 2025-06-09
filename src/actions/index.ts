@@ -1,14 +1,13 @@
 import { defineAction } from 'astro:actions';
 import { FormularioConfiguracionSchema, type FormularioConfiguracion, ConfiguracionAvanzada, ConfiguracionAvanzadaSchema } from '../types';
-import { getAirtableData, updateAirtableData, enviarMensaje } from '../services';
+import { getAsistente, updateAirtableData, enviarMensaje, getConfiguracionAvanzada } from '../services';
 import type { AirtableRecord } from '../types/airtable';
-import { AirtableResponse } from '../types/airtable';
 
 export const server = {
     obtenerDatosConfiguracion: defineAction({
         handler: async () => {
             try {
-                const result = await getAirtableData('AsistentePorCliente');
+                const result = await getAsistente();
 
                 if (!result.success || !result.data) {
                     return {
@@ -37,7 +36,7 @@ export const server = {
         handler: async (input: { fields: FormularioConfiguracion }) => {
             try {
                 console.log('Action received input:', input);
-                const existingData = await getAirtableData('AsistentePorCliente');
+                const existingData = await getAsistente();
 
                 if (!existingData.success || !existingData.data) {
                     console.log('No existing configuration found');
@@ -106,7 +105,7 @@ export const server = {
     obtenerConfiguracionAvanzada: defineAction({
         handler: async () => {
             try {
-                const result = await getAirtableData('ConfiguracionAvanzada');
+                const result = await getConfiguracionAvanzada();
                 
                 if (!result.success || !result.data) {
                     return {
@@ -130,12 +129,12 @@ export const server = {
         }
     }),
     guardarConfiguracionAvanzada: defineAction({
-        accept: 'form',
+        accept: 'json',
         input: ConfiguracionAvanzadaSchema,
         handler: async (input: { fields: ConfiguracionAvanzada }) => {
             try {
                 // Intentar obtener el registro existente
-                const existingData = await getAirtableData('ConfiguracionAvanzada');
+                const existingData = await getConfiguracionAvanzada();
 
                 if (existingData.success && existingData.data) {
                     // Si existe, actualizar
@@ -160,7 +159,7 @@ export const server = {
 
 export async function getAsistenteConfig() {
     try {
-        const response = await getAirtableData('AsistentePorCliente');
+        const response = await getAsistente();
         if (!response.success || !response.data) {
             throw new Error(response.error || 'Error al obtener configuración del asistente');
         }
@@ -177,7 +176,7 @@ export async function getAsistenteConfig() {
 export async function updateAsistenteConfig(data: FormularioConfiguracion) {
     try {
         // Primero obtenemos el registro actual para asegurarnos de que existe
-        const currentConfig = await getAirtableData('AsistentePorCliente');
+        const currentConfig = await getAsistente();
         if (!currentConfig.success || !currentConfig.data) {
             throw new Error(currentConfig.error || 'No se encontró la configuración actual');
         }
@@ -201,7 +200,7 @@ export async function updateAsistenteConfig(data: FormularioConfiguracion) {
 export async function updateConfiguracionAvanzada(data: ConfiguracionAvanzada) {
     try {
         // Primero obtenemos el registro actual para asegurarnos de que existe
-        const currentConfig = await getAirtableData('AsistentePorCliente');
+        const currentConfig = await getAsistente();
         if (!currentConfig.success || !currentConfig.data) {
             throw new Error(currentConfig.error || 'No se encontró la configuración actual');
         }

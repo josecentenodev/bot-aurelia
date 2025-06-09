@@ -9,10 +9,10 @@ Airtable.configure({
 
 const base = Airtable.base(import.meta.env.AIRTABLE_BASE_ID);
 
-export async function getAirtableData(table: string): Promise<AirtableResponse> {
+export async function getAsistente(): Promise<AirtableResponse> {
     try {
         // Primero obtenemos el asistente asociado al locationId
-        const asistentePorClienteRecords = await base(table).select({
+        const asistentePorClienteRecords = await base('AsistentePorCliente').select({
             filterByFormula: `{locationId} = '${import.meta.env.LOCATION_ID}'`,
             maxRecords: 1
         }).firstPage();
@@ -49,6 +49,63 @@ export async function getAirtableData(table: string): Promise<AirtableResponse> 
         const record: AirtableRecord = {
             id: asistenteRecords[0].id,
             fields: asistenteRecords[0].fields as FormularioConfiguracion
+        };
+
+        return {
+            success: true,
+            data: record
+        };
+    } catch (error) {
+        console.error('Error al obtener datos de Airtable:', error);
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Error al obtener datos'
+        };
+    }
+}
+
+export async function getConfiguracionAvanzada(): Promise<AirtableResponse> {
+    try {
+        // Primero obtenemos el asistente asociado al locationId
+        const asistentePorClienteRecords = await base('AsistentePorCliente').select({
+            filterByFormula: `{locationId} = '${import.meta.env.LOCATION_ID}'`,
+            maxRecords: 1
+        }).firstPage();
+
+        if (!asistentePorClienteRecords || asistentePorClienteRecords.length === 0) {
+            return {
+                success: false,
+                error: 'No se encontró asistente asociado al cliente'
+            };
+        }
+
+        // Obtenemos el asistenteId de la relación
+        const asistenteId = asistentePorClienteRecords[0].fields.asistenteId;
+        if (!asistenteId) {
+            return {
+                success: false,
+                error: 'No se encontró ID del asistente'
+            };
+        }
+
+        // Ahora obtenemos los datos del asistente
+        const configuracionAvanzada = await base('ConfiguracionAvanzada').select({
+            filterByFormula: `{asistenteId (from asistenteId)} = '${asistenteId}'`,
+            maxRecords: 1
+        }).firstPage();
+
+        console.log('configuracionAvanzada', configuracionAvanzada);
+
+        if (!configuracionAvanzada || configuracionAvanzada.length === 0) {
+            return {
+                success: false,
+                error: 'No se encontró el asistente'
+            };
+        }
+
+        const record: AirtableRecord = {
+            id: configuracionAvanzada[0].id,
+            fields: configuracionAvanzada[0].fields as ConfiguracionAvanzada
         };
 
         return {
