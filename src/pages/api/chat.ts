@@ -1,13 +1,13 @@
 import type { APIRoute } from 'astro';
 import { OpenAI } from 'openai';
 import Airtable from 'airtable';
+import { getAsistente } from '../../services';
 
 const openai = new OpenAI({
   apiKey: import.meta.env.OPENAI_API_KEY,
 });
 
 const base = new Airtable({ apiKey: import.meta.env.AIRTABLE_API_KEY }).base(import.meta.env.AIRTABLE_BASE_ID);
-// Here I should load the assistant's information from Airtable and then pass it to the OpenAI API as a system message.
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -31,13 +31,32 @@ export const POST: APIRoute = async ({ request }) => {
       Contenido: message,
       RoleOpenAI: 'user',
     });
+    const { success, data } = await getAsistente();
+    console.log('35: Configuracion de Asistente:', data?.fields);
+    if (!success || !data) {
+      return new Response(JSON.stringify({
+        success: false,
+        error: 'No se pudo obtener la configuración del asistente. Asegúrate de que el asistente esté configurado correctamente.',
+      }),
+        { status: 500 })
+    }
+    const systemPrompt = data.fields 
+    && 'NombreAsistente' in data.fields 
+    && data.fields.NombreEmpresa 
+    && data.fields.Objetivo
+      ? `Eres ${data.fields.NombreAsistente} y tu objetivo es ayudar a los usuarios a resolver sus dudas de la mejor manera posible.
+      Tu tono es ${data.fields.Tono.toLowerCase()} y representas a la empresa ${data.fields.NombreEmpresa}.
+      Descripción de la empresa: ${data.fields.DescripcionEmpresa || 'No se proporcionó una descripción.'}
+      Objetivo: ${data.fields.Objetivo || 'No se proporcionó un objetivo.'}`
+      : 'Eres un asistente virtual y tu objetivo es ayudar a los usuarios a resolver sus dudas de la mejor manera posible.';
+
 
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
-          content: "Eres un asistente virtual amigable y servicial."
+          content: systemPrompt
         },
         {
           role: "user",
