@@ -20,6 +20,7 @@ export interface MessageFromAirtable {
 export interface Message {
 	role: 'user' | 'assistant';
 	content: string;
+	hora?: string;
 }
 
 export enum Tono {

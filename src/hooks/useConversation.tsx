@@ -18,7 +18,8 @@ export function useConversation() {
                         setConversationId(data.conversation.id);
                         setMessages(data.messages.map((msg: MessageFromAirtable) => ({
                             role: msg.RoleOpenAI,
-                            content: msg.Contenido
+                            content: msg.Contenido,
+                            hora: msg.FechaHora
                         })));
                     } else {
                         console.log('25: No existing conversation found, creating a new one in useConversation');

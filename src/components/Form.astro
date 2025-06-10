@@ -40,8 +40,8 @@ const formData: FormularioConfiguracion = {
   method="POST"
   action={actions.guardarCambiosConfiguracion}
 >
-  <div class="relative h-[75vh] overflow-y-auto flex flex-col gap-5">
-    <div class="grid grid-cols-3 gap-10">
+  <div class="h-[75vh] overflow-y-auto flex flex-col gap-5">
+    <div class="grid grid-cols-3 gap-10 z-20 px-2.5">
       <div class="flex flex-col gap-2">
         <label
           for="NombreAsistente"
@@ -152,7 +152,7 @@ const formData: FormularioConfiguracion = {
       </div>
     </div>
 
-    <div class="grid grid-cols-3 gap-10">
+    <div class="grid grid-cols-3 gap-10 px-2.5">
       <div class="flex flex-col gap-2">
         <label
           for="Sector"
@@ -203,7 +203,7 @@ const formData: FormularioConfiguracion = {
       </div>
     </div>
 
-    <div class="flex flex-col gap-5">
+    <div class="flex flex-col gap-5 px-2.5">
       <div class="flex flex-col gap-2">
         <label
           for="DescripcionEmpresa"
@@ -382,22 +382,19 @@ const formData: FormularioConfiguracion = {
         </span>
       </div>
     </div>
-
-    <div class="flex items-center justify-center gap-4 fixed bottom-10 left-0 right-0">
-      <button
-        type="submit"
-        class="bg-[#976FF1] py-2 px-5 rounded-lg text-white text-lg w-48 hover:cursor-pointer transition-all duration-150 active:scale-95 flex items-center justify-center gap-2"
-      >
-        <span id="buttonText">Guardar Cambios</span>
-        <div
-          id="spinner"
-          class="hidden"
-        >
-          <Spinner size="small" />
-        </div>
-      </button>
-    </div>
   </div>
+    <button
+      type="submit"
+      class="bg-[#976FF1] mt-5 mx-auto py-2 px-5 rounded-lg text-white text-lg w-48 hover:cursor-pointer transition-all duration-150 active:scale-95 flex items-center justify-center gap-2"
+    >
+      <span id="buttonText">Guardar Cambios</span>
+      <div
+        id="spinner"
+        class="hidden"
+      >
+        <Spinner size="small" />
+      </div>
+    </button>
 </form>
 
 <script>
