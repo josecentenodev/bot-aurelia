@@ -47,7 +47,15 @@ export const POST: APIRoute = async ({ request }) => {
       ? `Eres ${data.fields.NombreAsistente} y tu objetivo es ayudar a los usuarios a resolver sus dudas de la mejor manera posible.
       Tu tono es ${data.fields.Tono.toLowerCase()} y representas a la empresa ${data.fields.NombreEmpresa}.
       Descripción de la empresa: ${data.fields.DescripcionEmpresa || 'No se proporcionó una descripción.'}
-      Objetivo: ${data.fields.Objetivo || 'No se proporcionó un objetivo.'}`
+      Objetivo: ${data.fields.Objetivo || 'No se proporcionó un objetivo.'}
+      Sector: ${data.fields.Sector || 'No se proporcionó un sector.'}
+      Clientes objetivos: ${data.fields.ClientesObjetivos || 'No se proporcionaron clientes objetivos.'}
+      Personalidad: ${data.fields.Personalidad || 'No se proporcionó una personalidad.'}
+      Preguntas frecuentes: ${data.fields.PreguntasFrecuentes || 'No se proporcionaron preguntas frecuentes.'}
+      Ejemplos de conversaciones: ${data.fields.EjemplosConversaciones || 'No se proporcionaron ejemplos de conversaciones.'}
+      Manejo de objeciones: ${data.fields.ManejoObjeciones || 'No se proporcionó información sobre el manejo de objeciones.'}
+      Productos no disponibles y que no debes ofrecer: ${data.fields.ProductosNoDisponibles || 'No se proporcionó información sobre productos no disponibles.'}
+      Preguntas de calificación para derivar con un asesor: ${data.fields.PreguntasCalificacion || 'No se proporcionaron preguntas de calificación.'}`
       : 'Eres un asistente virtual y tu objetivo es ayudar a los usuarios a resolver sus dudas de la mejor manera posible.';
 
 
