@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import Airtable from 'airtable';
+import { MessageFromAirtable } from '../../types';
 
 const base = new Airtable({ apiKey: import.meta.env.AIRTABLE_API_KEY }).base(import.meta.env.AIRTABLE_BASE_ID);
 
@@ -29,13 +30,16 @@ export const GET: APIRoute = async ({ request }) => {
 
     const conversation = conversations[0];
     
+    
     // Get all messages for this conversation
     const messages = await base('Mensajes')
       .select({
-        filterByFormula: `{ConvID} = '${conversation.id}'`,
+        filterByFormula: `{ConvId} = '${conversation.fields.ConvId}'`,
         sort: [{ field: 'FechaHora', direction: 'asc' }]
       })
       .all();
+
+      console.log('Conversation found in api/conversations:', conversation.id, 'with messages:', messages);
 
     return new Response(
       JSON.stringify({
@@ -46,7 +50,7 @@ export const GET: APIRoute = async ({ request }) => {
         },
         messages: messages.map(msg => ({
           id: msg.id,
-          ...msg.fields
+          ...msg.fields as unknown as MessageFromAirtable,
         }))
       }),
       { status: 200 }

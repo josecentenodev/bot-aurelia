@@ -1,10 +1,26 @@
 import { z } from 'zod';
 
-export const GetAirtableSchema = z.object({
-	baseId: z.string(),
-	tableId: z.string(),
-	apiKey: z.string()
-})
+
+export interface AirtableResponse<T> {
+	success: boolean;
+	data?: T;
+	error?: string;
+}
+
+export interface MessageFromAirtable {
+	MsgId: number;
+	ConvId: string[];
+	Autor: string;
+	Contenido: string;
+	RoleOpenAI: 'user' | 'assistant';
+	FechaHora: string;
+}
+
+
+export interface Message {
+	role: 'user' | 'assistant';
+	content: string;
+}
 
 export enum Tono {
 	Profesional = 'Profesional',
@@ -40,12 +56,5 @@ export const ConfiguracionAvanzadaSchema = z.object({
 	})
 });
 
-export type GetAirtable = z.infer<typeof GetAirtableSchema>;
 export type FormularioConfiguracion = z.infer<typeof FormularioConfiguracionSchema>['fields'];
 export type ConfiguracionAvanzada = z.infer<typeof ConfiguracionAvanzadaSchema>['fields'];
-
-export interface AirtableResponse<T> {
-	success: boolean;
-	data?: T;
-	error?: string;
-}

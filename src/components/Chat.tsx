@@ -1,16 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
-
-interface Message {
-  role: 'user' | 'assistant';
-  content: string;
-}
+import { Message } from '../types';
+import { useConversation } from '../hooks/useConversation';
 
 export default function Chat() {
-  const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [conversationId, setConversationId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { messages, setMessages, conversationId, isLoading, setIsLoading, handleNewChat } = useConversation();
+
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -20,40 +16,6 @@ export default function Chat() {
     scrollToBottom();
   }, [messages]);
 
-  // Load existing conversation on component mount
-  useEffect(() => {
-    const loadConversation = async () => {
-      try {
-        const response = await fetch('/api/conversations');
-        const data = await response.json();
-        console.log(data);
-
-        if (data.success) {
-          if (data.conversation) {
-            setConversationId(data.conversation.ConvId);
-            setMessages(data.messages.map((msg: any) => ({
-              role: msg.RoleOpenAI,
-              content: msg.Contenido
-            })));
-          } else {
-            // Create new conversation if none exists
-            const createResponse = await fetch('/api/conversations', {
-              method: 'POST'
-            });
-            const createData = await createResponse.json();
-
-            if (createData.success) {
-              setConversationId(createData.conversation.ConvId);
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Error loading conversation:', error);
-      }
-    };
-
-    loadConversation();
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,37 +30,7 @@ export default function Chat() {
     setInputValue('');
     setIsLoading(true);
 
-    try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          message: userMessage.content,
-          conversationId 
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setMessages(prev => [...prev, {
-          role: 'assistant',
-          content: data.response
-        }]);
-      } else {
-        throw new Error(data.error || 'Error al procesar el mensaje');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: 'Lo siento, hubo un error al procesar tu mensaje.'
-      }]);
-    } finally {
-      setIsLoading(false);
-    }
+    handleNewChat(userMessage);
   };
 
   return (
@@ -107,11 +39,10 @@ export default function Chat() {
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`mb-4 p-3 rounded-lg ${
-              message.role === 'user' 
-                ? 'bg-[#7806F1] text-white ml-auto' 
-                : 'bg-gray-100 text-gray-800'
-            } max-w-[80%]`}
+            className={`mb-4 p-3 rounded-lg ${message.role === 'user'
+              ? 'bg-[#7806F1] text-white ml-auto'
+              : 'bg-gray-100 text-gray-800'
+              } max-w-[80%]`}
           >
             {message.content}
           </div>
@@ -123,7 +54,7 @@ export default function Chat() {
         )}
         <div ref={messagesEndRef} />
       </div>
-      
+
       <form onSubmit={handleSubmit} className="flex justify-between gap-2">
         <input
           type="text"
@@ -133,7 +64,7 @@ export default function Chat() {
           className="flex-1 p-2 border border-[#ddd] rounded-lg focus:outline-1 outline-[#7806F1]"
           disabled={isLoading}
         />
-        <button 
+        <button
           type="submit"
           disabled={isLoading}
           className="hover:cursor-pointer transition-all duration-150 active:scale-95 disabled:opacity-50"

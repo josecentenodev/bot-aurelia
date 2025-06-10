@@ -7,17 +7,18 @@ const openai = new OpenAI({
 });
 
 const base = new Airtable({ apiKey: import.meta.env.AIRTABLE_API_KEY }).base(import.meta.env.AIRTABLE_BASE_ID);
+// Here I should load the assistant's information from Airtable and then pass it to the OpenAI API as a system message.
 
 export const POST: APIRoute = async ({ request }) => {
   try {
     const { message, conversationId } = await request.json();
-    console.log(message, conversationId);
+    console.log('15: entrada POST en api/chat', message, conversationId);
 
     if (!message) {
       return new Response(
         JSON.stringify({
           success: false,
-          error: 'No se proporcionó un mensaje',
+          error: 'No se proporcionó un mensaje en el cuerpo de la solicitud en api/chat',
         }),
         { status: 400 }
       );
@@ -25,7 +26,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Store user message
     const userMessage = await base('Mensajes').create({
-      ConvID: conversationId,
+      ConvId: [conversationId],
       Autor: 'user',
       Contenido: message,
       RoleOpenAI: 'user',
@@ -48,12 +49,12 @@ export const POST: APIRoute = async ({ request }) => {
     const response = completion.choices[0]?.message?.content;
 
     if (!response) {
-      throw new Error('No se recibió respuesta del modelo');
+      throw new Error('52: No se recibió respuesta del modelo en api/chat');
     }
 
     // Store assistant message
     const assistantMessage = await base('Mensajes').create({
-      ConvId: conversationId,
+      ConvId: [conversationId],
       Autor: 'assistant',
       Contenido: response,
       RoleOpenAI: 'assistant',
@@ -69,11 +70,11 @@ export const POST: APIRoute = async ({ request }) => {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error en el endpoint de chat:', error);
+    console.error('73: Error en el endpoint de chat:', error);
     return new Response(
       JSON.stringify({
         success: false,
-        error: 'Error al procesar el mensaje',
+        error: '77: Error catch al procesar el mensaje en el endpoint de chat',
       }),
       { status: 500 }
     );
