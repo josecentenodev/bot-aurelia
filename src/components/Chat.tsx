@@ -61,7 +61,7 @@ export default function Chat() {
                   <button onClick={() => openFeedbackModal(message, true)} className='hover:cursor-pointer transition-all duration-150 active:scale-95'>
                     <img src='/thumb-up-svgrepo-com.svg' height={19} width={19} />
                   </button>
-                  <button onClick={() => openFeedbackModal(message, true)} className='hover:cursor-pointer transition-all duration-150 active:scale-95'>
+                  <button onClick={() => openFeedbackModal(message, false)} className='hover:cursor-pointer transition-all duration-150 active:scale-95'>
                     <img src='/thumb-down-svgrepo-com.svg' height={19} width={19} />
                   </button>
                 </div>

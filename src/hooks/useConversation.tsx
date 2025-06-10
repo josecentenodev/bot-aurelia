@@ -17,6 +17,7 @@ export function useConversation() {
                     if (data.conversation) {
                         setConversationId(data.conversation.id);
                         setMessages(data.messages.map((msg: MessageFromAirtable) => ({
+                            id: msg.MsgId,
                             role: msg.RoleOpenAI,
                             content: msg.Contenido,
                             hora: msg.FechaHora
@@ -63,9 +64,10 @@ export function useConversation() {
             });
 
             const data = await response.json();
-            console.log('66: Response from handleNewChat in useConversation:', data);
+
             if (data.success) {
                 setMessages(prev => [...prev, {
+                    id: data.MsgId,
                     role: 'assistant',
                     content: data.response
                 }]);
@@ -75,6 +77,7 @@ export function useConversation() {
         } catch (error) {
             console.error('Error catch handleNewChat:', error);
             setMessages(prev => [...prev, {
+                id: 'error',
                 role: 'assistant',
                 content: 'Lo siento, hubo un error al procesar tu mensaje.'
             }]);

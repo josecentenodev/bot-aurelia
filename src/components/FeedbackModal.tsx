@@ -7,7 +7,7 @@ interface FeedbackModalProps {
     message: Message;
     isPositive: boolean;
 }
-export default function FeedbackModal({ isOpen, onClose, message }: FeedbackModalProps) {
+export default function FeedbackModal({ isOpen, onClose, message, isPositive }: FeedbackModalProps) {
     const [feedback, setFeedback] = useState("");
     const [sending, setSending] = useState(false);
     const [sent, setSent] = useState(false);
@@ -23,7 +23,7 @@ export default function FeedbackModal({ isOpen, onClose, message }: FeedbackModa
             const res = await fetch("/api/feedback", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ feedback }),
+                body: JSON.stringify({ MsgId: message.id, content: feedback, isPositive }),
             });
 
             if (!res.ok) throw new Error("Error al enviar feedback");
@@ -65,7 +65,10 @@ export default function FeedbackModal({ isOpen, onClose, message }: FeedbackModa
                     </div>
                 ) : (
                     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                        <h2 className="text-xl font-semibold">Tu feedback 🙌</h2>
+                        <div className="flex items-center justify-between mb-4">
+                            <h2 className="text-xl font-semibold">Tu feedback</h2>
+                            {isPositive ? <img src='/thumb-up-svgrepo-com.svg' height={19} width={19} /> : <img src='/thumb-down-svgrepo-com.svg' height={19} width={19} />}
+                        </div>
                         <textarea
                             value={feedback}
                             onChange={(e) => setFeedback(e.target.value)}
@@ -88,7 +91,7 @@ export default function FeedbackModal({ isOpen, onClose, message }: FeedbackModa
                             <button
                                 type="submit"
                                 disabled={sending}
-                                className="rounded-xl bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 disabled:opacity-50"
+                                className="rounded-xl bg-[#7806F1] px-4 py-2 text-white hover:bg-indigo-700 disabled:opacity-50"
                             >
                                 {sending ? "Enviando…" : "Enviar"}
                             </button>

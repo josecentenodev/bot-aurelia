@@ -39,8 +39,6 @@ export const GET: APIRoute = async ({ request }) => {
       })
       .all();
 
-      console.log('Conversation found in api/conversations:', conversation.id, 'with messages:', messages);
-
     return new Response(
       JSON.stringify({
         success: true,
