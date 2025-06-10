@@ -9,6 +9,7 @@ export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -19,9 +20,44 @@ export default function Chat() {
     scrollToBottom();
   }, [messages]);
 
+  // Load existing conversation on component mount
+  useEffect(() => {
+    const loadConversation = async () => {
+      try {
+        const response = await fetch('/api/conversations');
+        const data = await response.json();
+        console.log(data);
+
+        if (data.success) {
+          if (data.conversation) {
+            setConversationId(data.conversation.ConvId);
+            setMessages(data.messages.map((msg: any) => ({
+              role: msg.RoleOpenAI,
+              content: msg.Contenido
+            })));
+          } else {
+            // Create new conversation if none exists
+            const createResponse = await fetch('/api/conversations', {
+              method: 'POST'
+            });
+            const createData = await createResponse.json();
+
+            if (createData.success) {
+              setConversationId(createData.conversation.ConvId);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error loading conversation:', error);
+      }
+    };
+
+    loadConversation();
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputValue.trim() || isLoading) return;
+    if (!inputValue.trim() || isLoading || !conversationId) return;
 
     const userMessage: Message = {
       role: 'user',
@@ -38,7 +74,10 @@ export default function Chat() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: userMessage.content }),
+        body: JSON.stringify({ 
+          message: userMessage.content,
+          conversationId 
+        }),
       });
 
       const data = await response.json();
@@ -63,7 +102,7 @@ export default function Chat() {
   };
 
   return (
-    <div className="h-2/3 flex-1 overflow-y-auto px-5 py-5 flex flex-col justify-between gap-5 shadow-sm rounded-lg bg-white">
+    <div className="h-[600px] flex-1 overflow-y-auto px-5 py-5 flex flex-col justify-between gap-5 shadow-sm rounded-lg bg-white">
       <div className="chat-messages">
         {messages.map((message, index) => (
           <div
