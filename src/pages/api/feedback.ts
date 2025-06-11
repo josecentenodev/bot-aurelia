@@ -5,19 +5,19 @@ const base = new Airtable({ apiKey: import.meta.env.AIRTABLE_API_KEY }).base(imp
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const { MsgId, content, isPositive } = await request.json();
+    const { id, content, isPositive } = await request.json();
 
-    console.log('Entrada POST en api/feedback:', MsgId, content, isPositive);
-    if (!MsgId || !content) {
+    console.log('Entrada POST en api/feedback:', id, content, isPositive);
+    if (!id || !content) {
       return new Response(JSON.stringify({ success: false, error: 'Es necesario enviar un mensaje como feedback' }), { status: 400 });
     }
 
     
     // Save feedback to Airtable
     await base('Feedback').create({
-      MsgId: [`${MsgId}`],
+      MsgId: [id],
       mensaje: content,
-      isPositive: isPositive,
+      Tipo: [`${isPositive ? 'Positivo' : 'Negativo'}`]
     });
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });

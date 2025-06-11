@@ -23,7 +23,7 @@ export default function FeedbackModal({ isOpen, onClose, message, isPositive }: 
             const res = await fetch("/api/feedback", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ MsgId: message.id, content: feedback, isPositive }),
+                body: JSON.stringify({ id: message.id, content: feedback, isPositive }),
             });
 
             if (!res.ok) throw new Error("Error al enviar feedback");

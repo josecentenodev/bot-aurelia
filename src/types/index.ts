@@ -14,6 +14,7 @@ export interface MessageFromAirtable {
 	Contenido: string;
 	RoleOpenAI: 'user' | 'assistant';
 	FechaHora: string;
+	id?: string;
 }
 
 

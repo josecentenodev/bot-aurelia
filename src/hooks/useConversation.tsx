@@ -12,12 +12,13 @@ export function useConversation() {
             try {
                 const response = await fetch('/api/conversations');
                 const data = await response.json();
+                console.log('20: Data from /api/conversations:', data);
 
                 if (data.success) {
                     if (data.conversation) {
                         setConversationId(data.conversation.id);
                         setMessages(data.messages.map((msg: MessageFromAirtable) => ({
-                            id: msg.MsgId,
+                            id: msg.id,
                             role: msg.RoleOpenAI,
                             content: msg.Contenido,
                             hora: msg.FechaHora
